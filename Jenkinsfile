@@ -1,8 +1,17 @@
-node('docker'){
- stage('SCM'){
- checkout poll: false, scm: [$class: 'GitSCM', branches: [[name: 'refs/heads/develop']], doGenerateSubmoduleConfigurations: false, extensions: [], submoduleCfg: [], userRemoteConfigs: [[url: 'https://github.com/CodeBabel/MEANStackApp.git']]]
- }
- stage('SonarQube Analysis') {
-        sh "/home/jenkins/tools/hudson.plugins.sonar.SonarRunnerInstallation/sonarqubescanner/bin/sonar-scanner -Dsonar.host.url=http://192.168.0.14:9000 -Dsonar.projectName=meanstackapp -Dsonar.projectVersion=1.0 -Dsonar.projectKey=meanstack:app -Dsonar.sources=. -Dsonar.projectBaseDir=/home/jenkins/workspace/sonarqube_test_pipeline"
-        }
+node {
+    stage "Create build output"
+    
+    // Make the output directory.
+    sh "mkdir -p output"
+
+    // Write an useful file, which is needed to be archived.
+    writeFile file: "output/usefulfile.txt", text: "This file is useful, need to archive it."
+
+    // Write an useless file, which is not needed to be archived.
+    writeFile file: "output/uselessfile.md", text: "This file is useless, no need to archive it."
+
+    stage "Archive build output"
+    
+    // Archive the build output artifacts.
+    archiveArtifacts artifacts: 'output/*.txt', excludes: 'output/*.md'
 }
