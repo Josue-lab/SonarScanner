@@ -1,15 +1,9 @@
 node{
-stage('Sonarqube') {
-    environment {
-        scannerHome = tool 'SonarQubeScanner'
-    }
-    steps {
-        withSonarQubeEnv('sonarqube') {
-            sh "${scannerHome}/bin/sonar-scanner"
-        }
-        timeout(time: 10, unit: 'MINUTES') {
-            waitForQualityGate abortPipeline: true
-        }
-    }
+stage(‘SonarQube analysis’)
+{
+def scannerHome = tool ‘SonarQube Scanner 2.8’;
+withSonarQubeEnv(‘My SonarQube Server’) {
+bat “${scannerHome}/bin/sonar-scanner”
+}
 }
 }
