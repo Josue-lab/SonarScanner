@@ -1,4 +1,8 @@
 node {
+ 
+ stage('Zero'){
+ echo "Hello World"
+ }
  stage('SCM') {
  git 'https://github.com/Josue-lab/SonarScanner.git'
  }
